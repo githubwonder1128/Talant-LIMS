@@ -40,6 +40,7 @@
     <link href="https://cdn.datatables.net/1.12.1/css/dataTables.material.min.css" rel="stylesheet"/>
 
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Styles -->
     <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
     <script>
@@ -112,24 +113,33 @@
                         @else
                             @if(Auth::user()->name == 'Besicon')
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/home')}}">Project Summary</a>
+                                <a class="nav-link" href="{{ url('/home')}}" style="font-size:20px;color:gold;font-weight:bold">Project Summary</a>
 
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/details')}} ">Project Details</a>
+                                <a class="nav-link" href=" {{ url('/details')}} " style="font-size:20px;color:gold;font-weight:bold">Project Details</a>
 
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/manpower')}}">Man Power</a>
+                                <a class="nav-link" href=" {{ url('/manpower')}}" style="font-size:20px;color:gold;font-weight:bold">Man Power</a>
 
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/drawing')}}">Drawing</a>
+                                <a class="nav-link" href=" {{ url('/project_progress')}}" style="font-size:20px;color:gold;font-weight:bold">Project Progress</a>
 
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/gallery')}}">Gallery</a>
+                                <a class="nav-link" href=" {{ url('/drawing')}}" style="font-size:20px;color:gold;font-weight:bold">Drawing</a>
+
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href=" {{ url('/gallery')}}" style="font-size:20px;color:gold;font-weight:bold">Gallery</a>
+
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href=" {{ url('/report')}}" style="font-size:20px;color:gold;font-weight:bold">Report</a>
 
                             </li>
                             @else

@@ -18,7 +18,10 @@ class Identify
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()->name != 'Besicon') {
+        if (Auth::user()->name != "Besicon") {
+            if (Auth::user()->name == 'fab') {
+                return redirect('fabrication_readonly');
+            }
             return redirect('manpower_readonly');
         }
         return $next($request);

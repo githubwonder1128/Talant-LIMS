@@ -58,6 +58,26 @@ class Projects extends Controller
                 $projects = ProjectSummary::groupby("p_code")->get();
                 $gallery = DB::table("table_projectphoto")->get();
                 return view("gallery",["Projects" => $projects,"Gallery"=>$gallery]);
+            case 'project_progress':
+                $p_completion = [];
+                $f_completion = [];
+                $res = ProjectSummary::get();
+                return view('project_progress',['Projects'=>$res]);
+            case 'report':
+                $res = ProjectSummary::get();
+                $approved_project = DB::table("table_approved_project_value")
+                                        ->selectRaw("SUM(approved_amount) AS approved_amount,approved_date")
+                                        ->whereYear("approved_date",date("Y"))
+                                        ->whereMonth("approved_date",date("m"))
+                                        ->groupBy("approved_date")
+                                        ->get();
+                $approved_vo = DB::table("table_approved_vo_value")
+                                    ->selectRaw("SUM(vo_amount) AS vo_amount,vo_date")
+                                    ->whereYear("vo_date",date("Y"))
+                                    ->whereMonth("vo_date",date("m"))
+                                    ->groupBy("vo_date")
+                                    ->get();
+                return view('report',['Projects'=>$res,'Approved_value'=>$approved_project,"Approved_vo"=>$approved_vo]);
             
             default:
                 $res = ProjectSummary::get();
@@ -140,6 +160,22 @@ class Projects extends Controller
                 return $del;
             case 'get_all_datas':
                 break;
+            case 'get_chart_data':
+                $year = $request->year;
+                $month = $request->month;
+                $approved_project = DB::table("table_approved_project_value")
+                                        ->selectRaw("SUM(approved_amount) AS approved_amount,approved_date")
+                                        ->whereYear("approved_date",$year)
+                                        ->whereMonth("approved_date",$month)
+                                        ->groupBy("approved_date")
+                                        ->get();
+                $approved_vo = DB::table("table_approved_vo_value")
+                                    ->selectRaw("SUM(vo_amount) AS vo_amount,vo_date")
+                                    ->whereYear("vo_date",$year)
+                                    ->whereMonth("vo_date",$month)
+                                    ->groupBy("vo_date")
+                                    ->get();
+                return [$approved_project,$approved_vo];
             
 
             default:

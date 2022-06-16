@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
 <div class="container-fluid">
     <div class="row">
         <div class="row">
@@ -21,12 +20,12 @@
                                     <th class="p_date-header">Date</th>
                                     <th class="p_name-header">P.Name</th>
                                     <th class="company_name-header">CompanyName</th>
-                                    <th class="company_value-header">CompanyValue</th>
                                     <th class="p_status-header">P.status</th>
                                     <th class="p_type-header">P.Type</th>
                                     <th class="p_work-header">P.Work</th>
                                     <th class="p_ic-header">PIC</th>
                                     <th class="include_materials-header">Include Materials</th>
+                                    <th class="include_roofing-header">Include Roofing</th>
                                     <th class="date_startWork-header">Date Start Work</th>
                                     <th class="date_completion-header">Date Completion</th>
                                     <th class="p_award-header">P.Award</th>
@@ -34,19 +33,20 @@
                                     <th class="p_completion-header">P.completion</th>
                                 </tr>
                             </thead>
-                            <tbody id="table_projectsummary-tbody">
+                            <tbody id="table_projectsummary-tbody"> 
                                 @for($i = 0; $i < count ($Projects); $i ++)
                                 <tr id="table_projectsummary-{{$Projects[$i]['p_id']}}" ondblclick="editRow(id)">
                                     <td class="p_code" data-text="{{$Projects[$i]['p_code']}}">{{$Projects[$i]['p_code']}}</td>
                                     <td class="p_date" data-text="{{$Projects[$i]['p_date']}}">{{$Projects[$i]['p_date']}}</td>
                                     <td class="p_name" data-text="{{$Projects[$i]['p_name']}}">{{$Projects[$i]['p_name']}}</td>
-                                    <td class="company_name" data-text="{{$Projects[$i]['company_name']}}"></td>
-                                    <td class="company_value" data-text="{{$Projects[$i]['company_value']}}"></td>
+                                    <td class="company_name" data-text="{{$Projects[$i]['company_name']}}">{{$Projects[$i]['company_name']}}</td>
                                     <td class="p_status" data-text="{{$Projects[$i]['p_status']}}">{{$Projects[$i]['p_status']}}</td>
                                     <td class="p_type" data-text="{{$Projects[$i]['p_type']}}">{{$Projects[$i]['p_type']}}</td>
                                     <td class="p_work" data-text="{{$Projects[$i]['p_work']}}">{{$Projects[$i]['p_work']}}</td>
                                     <td class="p_ic" data-text="{{$Projects[$i]['p_ic']}}">{{$Projects[$i]['p_ic']}}</td>
                                     <td class="include_materials" data-text="{{$Projects[$i]['include_materials']}}">{{$Projects[$i]['include_materials']}}</td>
+                                    <td class="include_roofing" data-text="{{$Projects[$i]['include_roofing']}}">{{$Projects[$i]['include_roofing']}}</td>
+                                    
                                     <td class="date_startWork" data-text="{{$Projects[$i]['date_startWork']}}">{{$Projects[$i]['date_startWork']}}</td>
                                     <td class="date_completion" data-text="{{$Projects[$i]['date_completion']}}">{{$Projects[$i]['date_completion']}}</td>
                                     <td class="p_award" data-text="{{$Projects[$i]['p_award']}}">{{$Projects[$i]['p_award']}}</td>
@@ -173,16 +173,37 @@
 
     $(document).ready(function () {
         // new Datatable($("#tbl_prjects"), data, {})
-        $('#table_projectsummary').DataTable({
-            autoWidth: false,
-            columnDefs: [
-                {
-                    targets: ['_all'],
-                    className: 'mdc-data-table__cell',
-                },
-            ],
-        });
+        $('#table_projectsummary')
+            .DataTable({
+                autoWidth: false,
+                columnDefs: [
+                    {
+                        targets: ['_all'],
+                        className: 'mdc-data-table__cell',
+                    },
+                ]
+                
+            })
+            .order([0,'desc'])
+            .draw();
+        backgroundColor();
     })
+
+    function backgroundColor() {
+        $("#table_projectsummary-tbody tr td").filter(function(){
+            switch ($(this).data('text')) {
+                case 'active':
+                    $(this).parent().css('background-color',"#00bfff")
+                    break;
+                case 'complete':
+                    $(this).parent().css('background-color',"#808080")
+                    break;
+                case 'aborted':
+                    $(this).parent().css('background-color',"#dc143c")
+                    break;
+            }
+        })
+    }
 
     function numberWithCommas(x) {
        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -194,7 +215,6 @@
         a=parseInt(a,10);
         return a;
     }
-    console.log(commasWithnumber('9,100'));
 
     let headers = {
         'table_approved_project_value':['p_code','approved_date','approved_options','approved_amount','uploadbtn','approved_uploadurl'],
@@ -253,9 +273,6 @@
             },
             success : function(data){
                 
-
-                
-                
                 for(table_name in data)
                 { 
                     let htmstr = "<div class='table-responsive'><table class = 'table align-middle mb-0 bg-white' >";
@@ -298,6 +315,7 @@
                     $(contextId).html(htmstr)
                 }
                 theadClickEvent();
+                backgroundColor()
                 calctotal();
             }
         })
@@ -386,19 +404,21 @@
     let present_table = '';
     let selects = {
             'company_value' : [1,2,3,4,5,6,7,8],
-            'p_status':['active','complete'],
+            'p_status':['active','complete',"aborted"],
             'p_type':['Main cone','Sub-con'],
             'p_work':['Steel Trusses','Steel Trusses & Roofing','Fbarication Only','Fbarication & Install','Others'],
             'p_ic':['WYF','WKL','WkM','CMH','Other'],
             'include_materials':['YES','NO'],
+            'include_roofing' : ["YES","NO"],
             'p_award':['Letter of Award','Approved Quotation','Purchase Order','Verbally','None'],
+            'f_completion' : ['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'],
             'p_completion' : ['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'],
             'sub_description' : ['Purchasing Materials','Crane','Lorry','Referer Fee','Painting','Wages','Others']
         }
     
     function editRow(id) {
         
-        let disableEdit = ['p_code','company_value'];
+        let disableEdit = [];
         let deleteEdit = ['progress_total','total_work_done','amount_due_to_claim'];
         present_table = id.split("-")[0];
         summary_id = id.split("-")[1];
@@ -407,16 +427,7 @@
         // $("#"+id).toggleClass("edit_status");
 
         //make p_code select
-        let p_codes = [];
-        $("#table_projectsummary-tbody .p_code").filter(function(){
-            p_codes[$(this).text()] = 0;
-        })
-        let select_p_codes = "<select class='form-control edit_set' id= 'edit-p_code'>";
-        for(p_code in p_codes)
-        {
-            select_p_codes += "<option>"+p_code+"</option>";
-        }
-        select_p_codes += "</select>";
+        
         
         $("#"+id+" td").filter(function(){
             //show create,update,delte button show
@@ -445,6 +456,20 @@
                     contenthtml += "</select>";
 
                 }else if(columnClass == "p_code"){
+                    let p_codes = [];
+                    $("#table_projectsummary-tbody .p_code").filter(function(){
+                        p_codes[$(this).text()] = 0;
+                    })
+                    let select_p_codes = "<select class='form-control edit_set' id= 'edit-p_code'>";
+                    for(p_code in p_codes)
+                    {
+                        if (p_code == $(this).data('text')) {
+                            select_p_codes += "<option selected>"+p_code+"</option>";  
+                        }else{
+                            select_p_codes += "<option>"+p_code+"</option>";
+                        }
+                    }
+                    select_p_codes += "</select>";
                     contenthtml += select_p_codes;
                 }
                 else{
@@ -452,6 +477,7 @@
                     if (columnClass.search("date") != -1) {
                         inputtype = 'date'
                     }
+                    console.log($(this).data('text'));
                     contenthtml += "<input type='"+inputtype+"' class='form-control edit_set' id='edit-"+columnClass+"' value='"+$(this).data('text')+"'>";
 
                     
@@ -606,21 +632,23 @@
                                     appendhtml += '<button class="form-control " onClick = "uploadfile(\''+present_table+"-"+headers[present_table][attr]+"-"+data +'\')"><i class="fa fa-upload"></i></button>';
                                     appendhtml += "</td>";
                                 }else {
-                                    appendhtml += "<td class='"+headers[present_table][attr]+"'>"+result[headers[present_table][attr]]+"</td>";
+                                    appendhtml += "<td class='"+headers[present_table][attr]+"' data-text='"+result[headers[present_table][attr]]+"'>"+result[headers[present_table][attr]]+"</td>";
                                 }
                             }
                             appendhtml += "</tr>"
                             $("#"+present_table+"-tbody").append(appendhtml)
                         }
-                        calctotal()
+                        calctotal();
                         break;
                     case 'update':
+                        
                         $("#"+present_table+"-"+summary_id+" td").filter(function(){
                             let columnClass = $(this).attr('class').split(" ")[0];
                             $(this).text(result[columnClass]);
                             $(this).attr("data-text",result[columnClass])
                             // $(this).data('text') = result[columnClass]
                         })
+                        console.log("update");
                         break;
                     case 'delete':
                         let deltr = $("#"+present_table+"-"+summary_id);
@@ -630,14 +658,11 @@
                         }else{
                            $("#"+present_table+"-"+summary_id).remove()
                         }
-                        
-                        break;
-                
-                    default:
                         break;
                 }
                 toastFunction();
-                calctotal()
+                calctotal();
+                backgroundColor()
             }
             
         })
@@ -674,7 +699,6 @@
                 imgsrc += filename;
                 imgsrc += "</a>";
                 $("."+tmp).html(imgsrc)
-                console.log(filename); // <-- display response from the PHP script, if any
             }
         });
     }
