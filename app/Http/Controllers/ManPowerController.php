@@ -24,6 +24,15 @@ class ManPowerController extends Controller
         return view("manpower_readonly",["Projects"=>$projects,"Workers"=>$workers,'Man_power' => $man_res]);
     }
 
+    public function fabricaion()
+    {
+        $ManPower = new ManPower;
+        $man_res = $ManPower->get_all();
+        $projects = ProjectSummary::where("f_completion","!=","100%")->groupby("p_code")->get();
+        $workers = DB::table("table_worker")->get();
+        return view("fabrication_readonly",["Projects"=>$projects,"Workers"=>$workers,'Man_power' => $man_res]);
+    }
+
     public function response(Request $request,$method)
     {
         $ManPower = new ManPower;
@@ -35,6 +44,24 @@ class ManPowerController extends Controller
 
             case "save_man":
                 $insertdata = $request->insert_data;
+                $p_code = $request->p_code;
+                $p_completion = $request->p_completion;
+                $flag_supervisor = $request->flag_supervisor;
+                if ($flag_supervisor == 1) {
+                    $up = DB::table('table_projectsummary')
+                                ->where("p_code",$p_code)
+                                ->update([
+                                    'p_completion' => $p_completion,
+                                    'p_completion_date' => $insertdata['man_date']
+                                ]);
+                    $in = DB::table("table_p_completion")
+                                ->insert([
+                                    'p_code'=>$p_code,
+                                    'p_completion_date'=>$insertdata['man_date'],
+                                    'p_completion' => $p_completion
+                                ]);
+                    return ;
+                }
                 $res  = ManPower::insert($insertdata);
                 return $res;
             case 'edit':
@@ -69,6 +96,33 @@ class ManPowerController extends Controller
             case 'getworkers':
                 $worker_res = DB::table("table_worker")->get();
                 return $worker_res;
+            case 'getvisor':
+                $p_code = $request->p_code;
+                $worker_id = $request->worker_id;
+                $supervisor = DB::table('table_worker')
+                                    ->where('worker_id',$worker_id)
+                                    ->pluck('worker_supervisor');
+                $p_completion = DB::table("table_projectsummary")->where("p_code",$p_code)
+                                        ->pluck('p_completion');
+                return ['supervisor'=> $supervisor,'p_completion'=> $p_completion];
+            
+            case 'savefcompletion':
+                $p_code = $request->p_code;
+                $f_completion = $request->f_completion;
+                $f_date = $request->f_date;
+                $up = DB::table('table_projectsummary')
+                            ->where('p_code',$p_code)
+                            ->update([
+                                'f_completion'=>$f_completion,
+                                'f_completion_date'=>$f_date
+                            ]);
+                $in = DB::table("table_fabrication")
+                            ->insert([
+                                'p_code'=>$p_code,
+                                'fab_date'=>$f_date,
+                                'fab_completion' => $f_completion
+                            ]);
+                return $up;
             
             default:
                 # code...

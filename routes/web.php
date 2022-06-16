@@ -22,6 +22,8 @@ Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get("/manpower_readonly",[App\Http\Controllers\ManPowerController::class,'index']);
+Route::get("/fabrication_readonly",[App\Http\Controllers\ManPowerController::class,'fabricaion']);
+
 
 Route::post("/manpower/{method}", [App\Http\Controllers\ManPowerController::class, 'response']);
 

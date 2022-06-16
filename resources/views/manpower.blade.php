@@ -295,11 +295,21 @@
         $("#exampleModal").modal('show');
     }
 
+    let supervisor = 0;
+    $("#supervisor").change(function(){
+        supervisor = 1;
+        console.log(supervisor);
+    })
+    $("#nosupervisor").change(function(){
+        supervisor = 0
+        console.log(supervisor);
+    })
+
     function addWorker() {
         let workername = $("#worker_name").val();
         let workerId = $("#worker_id").val();
         let rate = $("#rate").val();
-        let insertdata = {worker_name : workername,worker_key : workerId,worker_rate : rate};
+        let insertdata = {worker_name : workername,worker_key : workerId,worker_rate : rate,worker_supervisor : supervisor};
         $.ajax({
             type : 'post',
             url : "{{url('/manpower/insert_worker')}}",
@@ -314,15 +324,7 @@
             }
         })
     }
-    let supervisor = 0;
-    $("#supervisor").change(function(){
-        supervisor = 1;
-        console.log(supervisor);
-    })
-    $("#nosupervisor").change(function(){
-        supervisor = 0
-        console.log(supervisor);
-    })
+    
     let present_Id ;
     function editRow(man_id) {
         present_Id = man_id;

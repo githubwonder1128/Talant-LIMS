@@ -6,83 +6,95 @@
     <div class="row justify-content-center">
         <div class="card">
             <div class="card-body">
-                    <div class="row" style="margin-top:10px">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-6">
-                                <label>P.code</label>
-                            </div>
-                            <div class="col-md-9 col-sm-6">
-                                <select class="form-control" id="p_code" onchange="get_name()">
-                                    <!-- <option></option> -->
-                                    @for($i = 0; $i < count($Projects); $i++)
-                                        <option>{{$Projects[$i]['p_code']}}</option>
-                                    @endfor
-                                </select>
-                            </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                            <label>P.code</label>
+                        </div>
+                        <div class="col-md-9 col-sm-6">
+                            <select class="form-control" id="p_code" onchange="get_name()">
+                                <!-- <option></option> -->
+                                @for($i = 0; $i < count($Projects); $i++)
+                                    <option>{{$Projects[$i]['p_code']}}</option>
+                                @endfor
+                            </select>
                         </div>
                     </div>
-                    <div class="row" style="margin-top:10px">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-6">
-                                    <label>P.Name</label>
-                            </div>
-                            <div class="col-md-9 col-sm-6">
-                                <input class="form-control" id="p_name">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top:10px">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-6">
-                                    <label>Company Name</label>
-                            </div>
-                            <div class="col-md-9 col-sm-6">
-                                <input class="form-control" id="company_name">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top:10px">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-6">
-                                    <label>Date</label>
-                                </div>
-                            <div class="col-md-9 col-sm-6" >
-                                <input type="date" class="form-control" id="man_date" value="{{date('Y-m-d')}}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top:10px">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-6">
-                                <label>Worker Name</label>
-                            </div>
-                            <div class="col-md-9 col-sm-6" >
-                                <select class="form-control" id="worker_name">
-                                    @for($i = 0; $i < count($Workers); $i++)
-                                    <option value="{{$Workers[$i]->worker_id}}">{{$Workers[$i]->worker_name}}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top:10px">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-6">
-                                <label>Hours</label>
-                            </div>
-                            <div class="col-md-9 col-sm-6" >
-                                <input type="number" class='form-control' id="work_rate">
-                            </div>
-                        </div>
-                    </div>
-                    
                 </div>
-                <div class="row"  style="margin-bottom:10px;text-align:center">
-                    <div class="row" style="margin-top:10px;text-align:center">
-                        <button class="btn btn-primary"  onclick="save()">Save</button>   
+                <div class="row" style="margin-top:10px">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                                <label>P.Name</label>
+                        </div>
+                        <div class="col-md-9 col-sm-6">
+                            <input class="form-control" id="p_name">
+                        </div>
                     </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                                <label>Company Name</label>
+                        </div>
+                        <div class="col-md-9 col-sm-6">
+                            <input class="form-control" id="company_name">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                                <label>Date</label>
+                            </div>
+                        <div class="col-md-9 col-sm-6" >
+                            <input type="date" class="form-control" id="man_date" value="{{date('Y-m-d')}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                            <label>Worker Name</label>
+                        </div>
+                        <div class="col-md-9 col-sm-6" >
+                            <select class="form-control" id="worker_name" onchange="getvisor()">
+                                @for($i = 0; $i < count($Workers); $i++)
+                                <option value="{{$Workers[$i]->worker_id}}">{{$Workers[$i]->worker_name}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                            <label>Hours</label>
+                        </div>
+                        <div class="col-md-9 col-sm-6" >
+                            <input type="number" class='form-control' id="work_rate">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:10px" id="supervisor">
+                    <!-- <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                            <label>Hours</label>
+                        </div>
+                        <div class="col-md-9 col-sm-6" >
+                            <input type="number" class='form-control' id="work_rate">
+                        </div>
+                    </div> -->
+                </div>
+                
+                
+            </div>
+            <div class="row"  style="margin-bottom:10px;text-align:center">
+                <div class="row" style="margin-top:10px;text-align:center">
+                    <button class="btn btn-primary"  onclick="save()">Save</button>   
                 </div>
             </div>
+        </div>
     </div>
 
     <div class="row justify-content-center" style="margin-top: 20px">
@@ -125,7 +137,53 @@
 
 <script>
     let projects = `<?php echo json_encode($Projects)?>`;
+    let workers = `<?php echo json_encode($Workers)?>`;
     let total = JSON.parse(projects);
+    workers = JSON.parse(workers);
+    let flag_supervisor = 0;
+    function getvisor() {
+        let worker_id = $("#worker_name").val();
+        let p_code = $("#p_code").val();
+        $.ajax({
+            type : "post",
+            url : "{{url('/manpower/getvisor')}}",
+            data : {
+                p_code : p_code,
+                worker_id : worker_id
+            },
+            success : function(data){
+                console.log(data);
+                let supervisor = data['supervisor'][0];
+                flag_supervisor = supervisor;
+                let p_completion = data['p_completion'][0];
+                if (supervisor == 1) {
+                    let superhtml = "";
+                    superhtml += "<div class='row'>"
+                    superhtml += "<div class='col-md-3 col-sm-6'>";
+                    superhtml += "<label>Last Work Of This Project Completion %</label>"
+                    superhtml += "</div>";
+                    superhtml += "<div class='col-md-9 col-sm-6'>";
+                    superhtml += "<select class='form-control' id='p_completion'>";
+                    for (let i = 1; i <= 10; i++) {
+                        if (i*10+"%" == p_completion) {
+                            superhtml += "<option selected>"+(i*10)+"%</optioin>";
+                            
+                        }else{
+                            superhtml += "<option>"+(i*10)+"%</optioin>";
+                        }
+                    }
+                    superhtml += "</select>";
+                    superhtml += "</div>";
+                    superhtml += "</div>";
+                    $("#supervisor").html(superhtml)
+                }else{
+                    $("#supervisor").html("")
+                }
+                
+
+            }
+        })
+    }
     function get_name() {
         let chage_sel = $("#p_code").val();
         for (let i = 0; i < total.length; i++) {
@@ -136,6 +194,7 @@
             }
             
         }
+        getvisor()
     }
 
     function save(){
@@ -143,13 +202,17 @@
         let worker_date = $("#man_date").val();
         let worker_name = $("#worker_name").val();
         let hours = $("#work_rate").val();
+        let p_completion = $("#p_completion").val();
         let result = {man_date : worker_date,man_workerid : worker_name,man_hours : hours,p_code : p_code};
         console.log(result);
         $.ajax({
             type : 'post',
             url : "{{url('/manpower/save_man')}}",
             data : {
-                insert_data : result
+                insert_data : result,
+                p_code : p_code,
+                p_completion : p_completion,
+                flag_supervisor : flag_supervisor
             },
             success : function(data){
                 toastFunction()

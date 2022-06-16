@@ -29,12 +29,12 @@
                                         <th>Date</th>
                                         <th>P.Name</th>
                                         <th>CompanyName</th>
-                                        <th>CompanyValue</th>
                                         <th>P.status</th>
                                         <th>P.Type</th>
                                         <th>P.Work</th>
                                         <th>PIC</th>
                                         <th>Include Materials</th>
+                                        <th>Include Roofing</th>
                                         <th>Date Start Work</th>
                                         <th>Date Completion</th>
                                         <th>P.Award</th>
@@ -45,17 +45,17 @@
                                 </thead>
                                 <tbody>
                                     @for($i = 0; $i < count ($Projects); $i ++)
-                                    <tr id="tbl_projects_summary-{{$Projects[$i]['p_id']}}">
+                                    <tr id="tbl_projects_summary-{{$Projects[$i]['p_id']}}" class="{{$Projects[$i]['p_status']}}">
                                         <td>{{$Projects[$i]['p_code']}}</td>
                                         <td>{{$Projects[$i]['p_date']}}</td>
                                         <td>{{$Projects[$i]['p_name']}}</td>
                                         <td>{{$Projects[$i]['company_name']}}</td>
-                                        <td>{{$Projects[$i]['company_value']}}</td>
                                         <td>{{$Projects[$i]['p_status']}}</td>
                                         <td>{{$Projects[$i]['p_type']}}</td>
                                         <td>{{$Projects[$i]['p_work']}}</td>
                                         <td>{{$Projects[$i]['p_ic']}}</td>
                                         <td>{{$Projects[$i]['include_materials']}}</td>
+                                        <td>{{$Projects[$i]['include_roofing']}}</td>
                                         <td>{{$Projects[$i]['date_startWork']}}</td>
                                         <td>{{$Projects[$i]['date_completion']}}</td>
                                         <td>{{$Projects[$i]['p_award']}}</td>
@@ -271,7 +271,12 @@
                     className: 'mdc-data-table__cell',
                 },
             ],
-        });
+        })
+        .order([0,'desc'])
+        .draw();;
+        $(".active").css("background-color","#00bfff");
+        $(".complete").css("background-color","#808080");
+        $(".aborted").css("background-color","#dc143c");
     })
 
     $("tr").click(function(){
@@ -279,6 +284,7 @@
         $("tr").css("background-color","")
         $(this).css("background-color","green")
         get_detail_total(rowId);
+        
     })
 
     function numberWithCommas(x) {
@@ -321,6 +327,9 @@
                         $(this).text(numberWithCommas(($(this).text() * 1).toFixed(2)))
                     }
                 })
+                $(".active").css("background-color","#00bfff");
+                $(".complete").css("background-color","#808080");
+                $(".aborted").css("background-color","#dc143c");
             }
         })
     }
