@@ -20,7 +20,7 @@
                                 <select class="form-control" id="sel-p_code" onchange="display()">
                                     <option></option>
                                     @for($i = 0; $i < count($Projects); $i++)
-                                        <option>{{$Projects[$i]['p_code']}}</option>
+                                        <option>{{$Projects[$i]['p_code']}}_{{$Projects[$i]['p_name']}}_{{$Projects[$i]['company_name']}}</option>
                                     @endfor
                                 </select>
                             </div>
@@ -57,7 +57,7 @@
 <script>
     function upload() {
         let file_data = $('#file-sel').prop('files')[0];
-        let p_code = $("#sel-p_code").val()
+        let p_code = $("#sel-p_code").val().split("_")[0]
         let form_data = new FormData();                  
         form_data.append('file', file_data);
         form_data.append("option",p_code);                            
@@ -79,7 +79,7 @@
             type : 'post',
             url : "{{url('/projects/getgallery')}}",
             data : {
-                p_code : $("#sel-p_code").val()
+                p_code : $("#sel-p_code").val().split("_")[0]
             },
             success : function(data){
                 toastFunction();

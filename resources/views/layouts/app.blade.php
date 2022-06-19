@@ -142,9 +142,14 @@
                                 <a class="nav-link" href=" {{ url('/report')}}" style="font-size:20px;color:gold;font-weight:bold">Report</a>
 
                             </li>
+                            @elseif(Auth::user()->name == 'fab')
+                                <li class="nav-item">
+                                    <a class="nav-link" href=" {{ url('/fabribation_readonly')}}"  style="font-size:20px;color:gold;font-weight:bold">Fab</a>
+
+                                </li>
                             @else
                                 <li class="nav-item">
-                                    <a class="nav-link" href=" {{ url('/manpower')}}">Man Power</a>
+                                    <a class="nav-link" href=" {{ url('/manpower_readonly')}}"  style="font-size:20px;color:gold;font-weight:bold">Man Power</a>
 
                                 </li>
                             @endif
