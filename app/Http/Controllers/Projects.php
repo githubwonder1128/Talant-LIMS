@@ -61,8 +61,9 @@ class Projects extends Controller
             case 'project_progress':
                 $p_completion = [];
                 $f_completion = [];
-                $res = ProjectSummary::get();
-                return view('project_progress',['Projects'=>$res]);
+                $res = ProjectSummary::where("f_completion","!=",'100%')->orderby('p_code','desc')->get();
+                $complete = ProjectSummary::where("f_completion","=","100%")->orderby('p_code','desc')->get();
+                return view('project_progress',['Projects'=>$res,"Complete"=>$complete]);
             case 'report':
                 $res = ProjectSummary::get();
                 $approved_project = DB::table("table_approved_project_value")

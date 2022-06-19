@@ -17,6 +17,7 @@
                             <tr>
                                 <th>P.Code</th>
                                 <th>P.Name</th>
+                                <th>SuperVisor</th>
                                 <th>CompanyName</th>
                                 <th>Date</th>
                                 <th>Worker Name</th>
@@ -31,6 +32,7 @@
                                 <tr ondblclick="editRow('{{$Man_power[$i]->man_id}}')" id="table_man_power-{{$Man_power[$i]->man_id}}">
                                     <td class='p_code'>{{$Man_power[$i]->p_code}}</td>
                                     <td class="p_name">{{$Man_power[$i]->p_name}}</td>
+                                    <td class="worker_supervisor">{{$Man_power[$i]->worker_supervisor}}</td>
                                     <td class="company_name">{{$Man_power[$i]->company_name}}</td>
                                     <td class="man_date">{{$Man_power[$i]->man_date}}</td>
                                     <td class="worker_name">{{$Man_power[$i]->worker_name}}</td>

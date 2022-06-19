@@ -28,7 +28,7 @@ class ManPowerController extends Controller
     {
         $ManPower = new ManPower;
         $man_res = $ManPower->get_all();
-        $projects = ProjectSummary::where("f_completion","!=","100%")->groupby("p_code")->get();
+        $projects = ProjectSummary::where("f_completion","!=","100%")->orderby("p_code",'desc')->get();
         $workers = DB::table("table_worker")->get();
         return view("fabrication_readonly",["Projects"=>$projects,"Workers"=>$workers,'Man_power' => $man_res]);
     }
@@ -60,7 +60,6 @@ class ManPowerController extends Controller
                                     'p_completion_date'=>$insertdata['man_date'],
                                     'p_completion' => $p_completion
                                 ]);
-                    return ;
                 }
                 $res  = ManPower::insert($insertdata);
                 return $res;
