@@ -24,13 +24,18 @@ class Projects extends Controller
         $ManPower = new ManPower;
         switch ($viewname) {
             case 'home':
-                $res = ProjectSummary::get();
+                // $res = ProjectSummary::get();
                 $total = DB::select("SELECT SUM(B.approved_amount) + SUM(vo_amount) - D.total_work_done AS active_p_value,SUM(B.approved_amount) + SUM(vo_amount) - E.collections AS active_collections,A.p_code FROM (SELECT * FROM table_projectsummary WHERE p_status = 'active' GROUP BY p_code) A
                 LEFT JOIN (SELECT SUM(approved_amount) AS approved_amount,p_code FROM table_approved_project_value GROUP BY p_code) B ON A.p_code = B.p_code
                 LEFT JOIN (SELECT SUM(vo_amount) AS vo_amount,p_code FROM table_approved_vo_value GROUP BY p_code) C ON A.p_code = C.p_code
                 LEFT JOIN (SELECT SUM(progress_gross_work_done) + SUM(progress_vo_done) AS total_work_done,p_code FROM table_progress_claims GROUP BY p_code) D ON A.p_code = D.p_code
                 LEFT JOIN (SELECT  SUM(invoice_payment_made) AS collections,p_code FROM table_invoice_billed GROUP BY p_code) E ON A.p_code = E.p_code
                 GROUP BY A.p_code");
+                $res = DB::select("SELECT A.p_code,A.p_id,A.p_date,A.p_name,A.company_name,A.date_completion,A.p_status,A.p_type,A.p_work,A.f_completion,A.p_completion,A.p_ic,A.include_roofing,A.include_materials,A.p_award,B.approved_amount ,C.vo_amount ,D.invoice_payment_made,E.progress_less_retention FROM table_projectsummary A
+                LEFT JOIN (SELECT SUM(approved_amount) AS approved_amount,p_code FROM table_approved_project_value GROUP BY p_code) B ON A.p_code = B.p_code
+                LEFT JOIN (SELECT SUM(vo_amount) AS vo_amount,p_code FROM table_approved_vo_value GROUP BY p_code) C ON A.p_code = C.p_code
+                LEFT JOIN (SELECT SUM(invoice_payment_made) AS invoice_payment_made,p_code FROM table_invoice_billed GROUP BY p_code) D ON A.p_code = D.p_code
+                LEFT JOIN (SELECT SUM(progress_less_retention) AS progress_less_retention,p_code FROM table_progress_claims GROUP BY p_code) E ON A.p_code = E.p_code ORDER BY A.p_code");
                 $totalpvalue = 0;
                 $totalcollection = 0;
                 for ($i=0; $i < count($total); $i++) { 
@@ -39,7 +44,11 @@ class Projects extends Controller
                 }
                 return view('home',["Projects" => $res,"Total"=>[$totalpvalue,$totalcollection]]);
             case 'details':
-                $res = ProjectSummary::get();
+                $res = DB::select("SELECT A.p_code,A.p_id,A.p_date,A.p_name,A.company_name,A.date_completion,A.p_status,A.p_type,A.p_work,A.f_completion,A.p_completion,A.p_ic,A.include_roofing,A.include_materials,A.p_award,B.approved_amount ,C.vo_amount ,D.invoice_payment_made,E.progress_less_retention,A.date_startWork,A.date_completion FROM table_projectsummary A
+                LEFT JOIN (SELECT SUM(approved_amount) AS approved_amount,p_code FROM table_approved_project_value GROUP BY p_code) B ON A.p_code = B.p_code
+                LEFT JOIN (SELECT SUM(vo_amount) AS vo_amount,p_code FROM table_approved_vo_value GROUP BY p_code) C ON A.p_code = C.p_code
+                LEFT JOIN (SELECT SUM(invoice_payment_made) AS invoice_payment_made,p_code FROM table_invoice_billed GROUP BY p_code) D ON A.p_code = D.p_code
+                LEFT JOIN (SELECT SUM(progress_less_retention) AS progress_less_retention,p_code FROM table_progress_claims GROUP BY p_code) E ON A.p_code = E.p_code");
                 return view('details',["Projects" => $res]);
             case 'download':
                 $filename = $viewname;
@@ -178,6 +187,33 @@ class Projects extends Controller
                                     ->get();
                 return [$approved_project,$approved_vo];
             
+            case 'get_projects_status':
+                $status = $request->status;
+                if ($status != "all" && $status != "retention") {
+                
+                    $res = DB::select("SELECT A.p_code,A.p_id,A.p_date,A.p_name,A.company_name,A.date_completion,A.p_status,A.p_type,A.p_work,A.f_completion,A.p_completion,A.p_ic,A.include_roofing,A.include_materials,A.p_award,B.approved_amount ,C.vo_amount ,D.invoice_payment_made,E.progress_less_retention FROM table_projectsummary A
+                LEFT JOIN (SELECT SUM(approved_amount) AS approved_amount,p_code FROM table_approved_project_value GROUP BY p_code) B ON A.p_code = B.p_code
+                LEFT JOIN (SELECT SUM(vo_amount) AS vo_amount,p_code FROM table_approved_vo_value GROUP BY p_code) C ON A.p_code = C.p_code
+                LEFT JOIN (SELECT SUM(invoice_payment_made) AS invoice_payment_made,p_code FROM table_invoice_billed GROUP BY p_code) D ON A.p_code = D.p_code
+                LEFT JOIN (SELECT SUM(progress_less_retention) AS progress_less_retention,p_code FROM table_progress_claims GROUP BY p_code) E ON A.p_code = E.p_code WHERE A.p_status = '".$status."'");
+                    
+                }
+                elseif ($status =='all') {
+                    $res = DB::select("SELECT A.p_code,A.p_id,A.p_date,A.p_name,A.company_name,A.date_completion,A.p_status,A.p_type,A.p_work,A.f_completion,A.p_completion,A.p_ic,A.include_roofing,A.include_materials,A.p_award,B.approved_amount ,C.vo_amount ,D.invoice_payment_made,E.progress_less_retention FROM table_projectsummary A
+                    LEFT JOIN (SELECT SUM(approved_amount) AS approved_amount,p_code FROM table_approved_project_value GROUP BY p_code) B ON A.p_code = B.p_code
+                    LEFT JOIN (SELECT SUM(vo_amount) AS vo_amount,p_code FROM table_approved_vo_value GROUP BY p_code) C ON A.p_code = C.p_code
+                    LEFT JOIN (SELECT SUM(invoice_payment_made) AS invoice_payment_made,p_code FROM table_invoice_billed GROUP BY p_code) D ON A.p_code = D.p_code
+                    LEFT JOIN (SELECT SUM(progress_less_retention) AS progress_less_retention,p_code FROM table_progress_claims GROUP BY p_code) E ON A.p_code = E.p_code");
+                }
+                elseif ($status == 'retention') {
+                    $res = DB::select("SELECT A.p_code,A.p_id,A.p_date,A.p_name,A.company_name,A.date_completion,A.p_status,A.p_type,A.p_work,A.f_completion,A.p_completion,A.p_ic,A.include_roofing,A.include_materials,A.p_award,B.approved_amount ,C.vo_amount ,D.invoice_payment_made,E.progress_less_retention FROM table_projectsummary A
+                    LEFT JOIN (SELECT SUM(approved_amount) AS approved_amount,p_code FROM table_approved_project_value GROUP BY p_code) B ON A.p_code = B.p_code
+                    LEFT JOIN (SELECT SUM(vo_amount) AS vo_amount,p_code FROM table_approved_vo_value GROUP BY p_code) C ON A.p_code = C.p_code
+                    LEFT JOIN (SELECT SUM(invoice_payment_made) AS invoice_payment_made,p_code FROM table_invoice_billed GROUP BY p_code) D ON A.p_code = D.p_code
+                    LEFT JOIN (SELECT SUM(progress_less_retention) AS progress_less_retention,p_code FROM table_progress_claims GROUP BY p_code) E ON A.p_code = E.p_code WhERE E.progress_less_retention > 0");
+                }
+                return $res;
+            
 
             default:
                 # code...
@@ -228,6 +264,12 @@ class Projects extends Controller
                         ->where("p_code",$p_code)
                         ->pluck("remark_content");
         $result['remarks'] = $remarks;
+
+        $date_data = DB::table("table_projectsummary")
+                        ->where("p_code",$p_code)
+                        ->get();
+        // dd($date_data[0]->date_completion);
+        $result['date_data'] = ['date_startWork' => $date_data[0]->date_startWork, "date_completion" => $date_data[0]->date_completion];
 
         return $result;
     }

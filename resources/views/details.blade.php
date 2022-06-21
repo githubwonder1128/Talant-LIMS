@@ -19,40 +19,41 @@
                                     <th class="p_code-header">P.Code</th>
                                     <th class="p_date-header">Date</th>
                                     <th class="p_name-header">P.Name</th>
-                                    <th class="company_name-header">CompanyName</th>
+                                    <th class="company_name-header">Client</th>
                                     <th class="p_status-header">P.status</th>
                                     <th class="p_type-header">P.Type</th>
                                     <th class="p_work-header">P.Work</th>
                                     <th class="p_ic-header">PIC</th>
-                                    <th class="include_materials-header">Include Materials</th>
-                                    <th class="include_roofing-header">Include Roofing</th>
+                                    <th class="include_materials-header">Materials</th>
+                                    <th class="include_roofing-header">Roofing</th>
                                     <th class="date_startWork-header">Date Start Work</th>
                                     <th class="date_completion-header">Date Completion</th>
                                     <th class="p_award-header">P.Award</th>
-                                    <th class="f_completion-header">F.completion</th>
-                                    <th class="p_completion-header">P.completion</th>
+                                    <th class="f_completion-header">Fab%</th>
+                                    <th class="p_completion-header">Site%</th>
+                                    <!-- <th class="balance_collectible_value">Bal.Collectible</th> -->
                                 </tr>
                             </thead>
                             <tbody id="table_projectsummary-tbody"> 
                                 @for($i = 0; $i < count ($Projects); $i ++)
-                                <tr id="table_projectsummary-{{$Projects[$i]['p_id']}}" ondblclick="editRow(id)">
-                                    <td class="p_code" data-text="{{$Projects[$i]['p_code']}}">{{$Projects[$i]['p_code']}}</td>
-                                    <td class="p_date" data-text="{{$Projects[$i]['p_date']}}">{{$Projects[$i]['p_date']}}</td>
-                                    <td class="p_name" data-text="{{$Projects[$i]['p_name']}}">{{$Projects[$i]['p_name']}}</td>
-                                    <td class="company_name" data-text="{{$Projects[$i]['company_name']}}">{{$Projects[$i]['company_name']}}</td>
-                                    <td class="p_status" data-text="{{$Projects[$i]['p_status']}}">{{$Projects[$i]['p_status']}}</td>
-                                    <td class="p_type" data-text="{{$Projects[$i]['p_type']}}">{{$Projects[$i]['p_type']}}</td>
-                                    <td class="p_work" data-text="{{$Projects[$i]['p_work']}}">{{$Projects[$i]['p_work']}}</td>
-                                    <td class="p_ic" data-text="{{$Projects[$i]['p_ic']}}">{{$Projects[$i]['p_ic']}}</td>
-                                    <td class="include_materials" data-text="{{$Projects[$i]['include_materials']}}">{{$Projects[$i]['include_materials']}}</td>
-                                    <td class="include_roofing" data-text="{{$Projects[$i]['include_roofing']}}">{{$Projects[$i]['include_roofing']}}</td>
+                                <tr id="table_projectsummary-{{$Projects[$i]->p_id}}" ondblclick="editRow(id)">
+                                    <td class="p_code" data-text="{{$Projects[$i]->p_code}}">{{$Projects[$i]->p_code}}</td>
+                                    <td class="p_date" data-text="{{$Projects[$i]->p_date}}">{{$Projects[$i]->p_date}}</td>
+                                    <td class="p_name" data-text="{{$Projects[$i]->p_name}}">{{$Projects[$i]->p_name}}</td>
+                                    <td class="company_name" data-text="{{$Projects[$i]->company_name}}">{{$Projects[$i]->company_name}}</td>
+                                    <td class="p_status" data-text="{{$Projects[$i]->p_status}}">{{$Projects[$i]->p_status}}</td>
+                                    <td class="p_type" data-text="{{$Projects[$i]->p_type}}">{{$Projects[$i]->p_type}}</td>
+                                    <td class="p_work" data-text="{{$Projects[$i]->p_work}}">{{$Projects[$i]->p_work}}</td>
+                                    <td class="p_ic" data-text="{{$Projects[$i]->p_ic}}">{{$Projects[$i]->p_ic}}</td>
+                                    <td class="include_materials" data-text="{{$Projects[$i]->include_materials}}">{{$Projects[$i]->include_materials}}</td>
+                                    <td class="include_roofing" data-text="{{$Projects[$i]->include_roofing}}">{{$Projects[$i]->include_roofing}}</td>
                                     
-                                    <td class="date_startWork" data-text="{{$Projects[$i]['date_startWork']}}">{{$Projects[$i]['date_startWork']}}</td>
-                                    <td class="date_completion" data-text="{{$Projects[$i]['date_completion']}}">{{$Projects[$i]['date_completion']}}</td>
-                                    <td class="p_award" data-text="{{$Projects[$i]['p_award']}}">{{$Projects[$i]['p_award']}}</td>
-                                    <td class="f_completion" data-text="{{$Projects[$i]['f_completion']}}">{{$Projects[$i]['f_completion']}}</td>
-                                    <td class="p_completion" data-text="{{$Projects[$i]['p_completion']}}">{{$Projects[$i]['p_completion']}}</td>
-                        
+                                    <td class="date_startWork" data-text="{{$Projects[$i]->date_startWork}}">{{$Projects[$i]->date_startWork}}</td>
+                                    <td class="date_completion" data-text="{{$Projects[$i]->date_completion}}">{{$Projects[$i]->date_completion}}</td>
+                                    <td class="p_award" data-text="{{$Projects[$i]->p_award}}">{{$Projects[$i]->p_award}}</td>
+                                    <td class="f_completion" data-text="{{$Projects[$i]->f_completion}}">{{$Projects[$i]->f_completion}}</td>
+                                    <td class="p_completion" data-text="{{$Projects[$i]->p_completion}}">{{$Projects[$i]->p_completion}}</td>
+                                    
                                 </tr>
                                 @endfor
                             </tbody>
@@ -186,7 +187,7 @@
             })
             .order([0,'desc'])
             .draw();
-        backgroundColor();
+        // backgroundColor();
     })
 
     function backgroundColor() {
@@ -315,7 +316,7 @@
                     $(contextId).html(htmstr)
                 }
                 theadClickEvent();
-                backgroundColor()
+                // backgroundColor()
                 calctotal();
             }
         })
@@ -339,7 +340,7 @@
                     total[tablename][amount] = 0;
                 }
                 $("."+amount).filter(function(){
-                    total[tablename][amount] += $(this).text() * 1;
+                    total[tablename][amount] += ($(this).text() * 1);
                 })
             }
         }
@@ -350,7 +351,7 @@
             {
                 footerhtm += "<label>";
                 footerhtm += "Total "+attr + ":"
-                footerhtm += total[tablename][attr];
+                footerhtm += numberWithCommas(total[tablename][attr].toFixed(2)) ;
                 footerhtm += "</label>";
             }
             $("#"+tablename+"-tfoot").html(footerhtm)
@@ -388,7 +389,7 @@
         {
             footerhtm += "<label>";
             footerhtm += "Total "+attr + ":"
-            footerhtm += progress_total[attr];
+            footerhtm += numberWithCommas(progress_total[attr].toFixed(2)) ;
             footerhtm += "</label>";
         }
         $("#table_progress_claims-tfoot").html(footerhtm)
@@ -404,7 +405,7 @@
     let present_table = '';
     let selects = {
             'company_value' : [1,2,3,4,5,6,7,8],
-            'p_status':['active','complete',"aborted"],
+            'p_status':['active','work Done',"aborted","fully paid"],
             'p_type':['Main cone','Sub-con'],
             'p_work':['Steel Trusses','Steel Trusses & Roofing','Fbarication Only','Fbarication & Install','Others'],
             'p_ic':['WYF','WKL','WkM','CMH','Other'],
@@ -619,6 +620,7 @@
                             // appendhtml += "<td class='"+attr+"'>"+result[attr]+"</td>";
                         }
                         if (present_table == "table_projectsummary") {
+                            console.log(para);
                             let tbl = $("#"+present_table).DataTable();
                             tbl.row.add(para).draw();
                             trClickEvent();
@@ -662,7 +664,7 @@
                 }
                 toastFunction();
                 calctotal();
-                backgroundColor()
+                // backgroundColor()
             }
             
         })
