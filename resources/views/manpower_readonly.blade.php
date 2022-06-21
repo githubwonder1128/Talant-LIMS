@@ -100,34 +100,37 @@
     <div class="row justify-content-center" style="margin-top: 20px">
         <div class="card">
             <div class="card-body">
-                <table class="table mdl-data-table" style="width: 100%">
-                    <thead>
-                        <tr>
-                            <th>P.Code</th>
-                            <th>P.Name</th>
-                            <th>CompanyName</th>
-                            <th>Date</th>
-                            <th>Worker Name</th>
-                            <th>Worker ID</th>
-                            <th>Hours</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for($i = 0; $i < count($Man_power); $i++)
+                <div class="row">
+                    <table class="table mdl-data-table" id="table_hours" style="width: 100%">
+                        <thead>
                             <tr>
-                                <td>{{$Man_power[$i]->p_code}}</td>
-                                <td>{{$Man_power[$i]->p_name}}</td>
-                                <td>{{$Man_power[$i]->company_name}}</td>
-                                <td>{{$Man_power[$i]->man_date}}</td>
-                                <td>{{$Man_power[$i]->worker_name}}</td>
-                                <td>{{$Man_power[$i]->worker_key}}</td>
-                                <td>{{$Man_power[$i]->man_hours}}</td>
-
-
+                                <th>P.Code</th>
+                                <th>P.Name</th>
+                                <th>CompanyName</th>
+                                <th>Date</th>
+                                <th>Worker Name</th>
+                                <th>Worker ID</th>
+                                <th>Hours</th>
                             </tr>
-                        @endfor
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @for($i = 0; $i < count($Man_power); $i++)
+                                <tr>
+                                    <td>{{$Man_power[$i]->p_code}}</td>
+                                    <td>{{$Man_power[$i]->p_name}}</td>
+                                    <td>{{$Man_power[$i]->company_name}}</td>
+                                    <td>{{$Man_power[$i]->man_date}}</td>
+                                    <td>{{$Man_power[$i]->worker_name}}</td>
+                                    <td>{{$Man_power[$i]->worker_key}}</td>
+                                    <td>{{$Man_power[$i]->man_hours}}</td>
+
+
+                                </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -141,6 +144,9 @@
     let total = JSON.parse(projects);
     workers = JSON.parse(workers);
     let flag_supervisor = 0;
+    $(document).ready(function(){
+        $("#table_hours").DataTable().order([3,'desc']).draw()
+    })
     function getvisor() {
         let worker_id = $("#worker_name").val();
         let p_code = $("#p_code").val();
@@ -164,7 +170,7 @@
                     superhtml += "</div>";
                     superhtml += "<div class='col-md-9 col-sm-6'>";
                     superhtml += "<select class='form-control' id='p_completion'>";
-                    for (let i = 1; i <= 10; i++) {
+                    for (let i = 0; i <= 10; i++) {
                         if (i*10+"%" == p_completion) {
                             superhtml += "<option selected>"+(i*10)+"%</optioin>";
                             

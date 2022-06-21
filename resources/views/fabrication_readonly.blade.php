@@ -58,8 +58,7 @@
                         </div>
                         <div class="col-md-9 col-sm-6">
                             <select class="form-control" id="f_completion">
-                                <option></option>
-                                @for($i = 1; $i < 11; $i++)
+                                @for($i = 0; $i < 11; $i++)
                                     <option>{{10*$i}}%</option>
                                 @endfor
                             </select>

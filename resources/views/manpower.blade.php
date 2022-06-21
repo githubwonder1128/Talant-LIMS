@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <table class="table mdl-data-table" style="width: 100%">
+                    <table id="table_manpower" class="table mdl-data-table" style="width: 100%">
                         <thead>
                             <tr>
                                 <th>P.Code</th>
@@ -30,16 +30,16 @@
                         <tbody id="table_man_power-tbody">
                             @for($i = 0; $i < count($Man_power); $i++)
                                 <tr ondblclick="editRow('{{$Man_power[$i]->man_id}}')" id="table_man_power-{{$Man_power[$i]->man_id}}">
-                                    <td class='p_code'>{{$Man_power[$i]->p_code}}</td>
-                                    <td class="p_name">{{$Man_power[$i]->p_name}}</td>
-                                    <td class="worker_supervisor">{{$Man_power[$i]->worker_supervisor}}</td>
-                                    <td class="company_name">{{$Man_power[$i]->company_name}}</td>
-                                    <td class="man_date">{{$Man_power[$i]->man_date}}</td>
-                                    <td class="worker_name">{{$Man_power[$i]->worker_name}}</td>
-                                    <td class="worker_key">{{$Man_power[$i]->worker_key}}</td>
-                                    <td clas="worker_rate">{{$Man_power[$i]->worker_rate}}</td>
-                                    <td class="man_hours">{{$Man_power[$i]->man_hours}}</td>
-                                    <td class="total">{{$Man_power[$i]->worker_rate * $Man_power[$i]->man_hours}}</td>
+                                    <td class='p_code' data-text="{{$Man_power[$i]->p_code}}">{{$Man_power[$i]->p_code}}</td>
+                                    <td class="p_name" data-text="{{$Man_power[$i]->p_name}}">{{$Man_power[$i]->p_name}}</td>
+                                    <td class="worker_supervisor" data-text="{{$Man_power[$i]->worker_supervisor}}">{{$Man_power[$i]->worker_supervisor}}</td>
+                                    <td class="company_name" data-text="{{$Man_power[$i]->company_name}}">{{$Man_power[$i]->company_name}}</td>
+                                    <td class="man_date" data-text="{{$Man_power[$i]->man_date}}">{{$Man_power[$i]->man_date}}</td>
+                                    <td class="worker_name" data-text="{{$Man_power[$i]->worker_id}}">{{$Man_power[$i]->worker_name}}</td>
+                                    <td class="worker_key" data-text="{{$Man_power[$i]->worker_key}}">{{$Man_power[$i]->worker_key}}</td>
+                                    <td clas="worker_rate" data-text="{{$Man_power[$i]->worker_rate}}">{{$Man_power[$i]->worker_rate}}</td>
+                                    <td class="man_hours" data-text="{{$Man_power[$i]->man_hours}}">{{$Man_power[$i]->man_hours}}</td>
+                                    <td class="total" data-text=">{{$Man_power[$i]->worker_rate * $Man_power[$i]->man_hours}}">{{$Man_power[$i]->worker_rate * $Man_power[$i]->man_hours}}</td>
 
 
                                 </tr>
@@ -67,9 +67,9 @@
                         <tbody id="table_worker-tbody">
                             @for($i = 0; $i < count($Worker); $i++)
                                 <tr ondblclick="editworker('{{$Worker[$i]->worker_id}}')" id="table_worker-{{$Worker[$i]->worker_id}}">
-                                    <td class="worker_key">{{$Worker[$i]->worker_key}}</td>
-                                    <td class="worker_name">{{$Worker[$i]->worker_name}}</td>
-                                    <td class="worker_rate">{{$Worker[$i]->worker_rate}}</td>
+                                    <td class="worker_key" data-text="{{$Worker[$i]->worker_key}}">{{$Worker[$i]->worker_key}}</td>
+                                    <td class="worker_name" data-text="{{$Worker[$i]->worker_name}}">{{$Worker[$i]->worker_name}}</td>
+                                    <td class="worker_rate" data-text="{{$Worker[$i]->worker_rate}}">{{$Worker[$i]->worker_rate}}</td>
 
                                 </tr>
                             @endfor
@@ -292,6 +292,9 @@
         $(".total").filter(function(){
             $(this).text(($(this).text() * 1).toFixed(2))
         })
+        $("#table_manpower").DataTable({
+            
+        }).order([4,'desc']).draw();
     })
     function display() {
         $("#exampleModal").modal('show');
@@ -332,9 +335,9 @@
         present_Id = man_id;
         let result = {};
         $("#table_man_power-"+man_id+" td").filter(function(){
-            let clname = $(this).attr("class");
-            result[clname] = $(this).text();
-            $("#edit-"+clname).val($(this).text())
+            let clname = $(this).attr("class").split(" ")[0];
+            result[clname] = $(this).data("text");
+            $("#edit-"+clname).val($(this).data('text'))
         })
         $("#exampleModal2").modal('show');
     }
@@ -344,8 +347,8 @@
         let result = {};
         $("#table_worker-"+worker_id+" td").filter(function(){
             let clname = $(this).attr("class");
-            result[clname] = $(this).text();
-            $("#bottom-"+clname).val($(this).text())
+            result[clname] = $(this).data("text");
+            $("#bottom-"+clname).val($(this).data('text'))
         })
         $("#exampleModal3").modal('show');
     }
