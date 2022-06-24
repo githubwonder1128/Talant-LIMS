@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-
+<style>
+    table td{
+        font-size : 10px!important;
+        padding : 5px 5px 5px 5px !important;
+        height : auto!important;
+    }
+</style>
 <div class="container">
     <div class="row justify-content-center">
         <div class="card">
@@ -117,7 +123,9 @@
     let projects = `<?php echo json_encode($Projects)?>`;
     let workers = `<?php echo json_encode($Workers)?>`;
     let total = JSON.parse(projects);
-    console.log(total);
+    $(document).ready(function(){
+        $("#table_projectsummary").DataTable();
+    })
     function get_name() {
         let chage_sel = $("#p_code").val();
         for (let i = 0; i < total.length; i++) {

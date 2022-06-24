@@ -19,7 +19,7 @@ class ManPowerController extends Controller
     {
         $ManPower = new ManPower;
         $man_res = $ManPower->get_all();
-        $projects = ProjectSummary::groupby("p_code")->get();
+        $projects = ProjectSummary::where('p_completion','!=','100%')->groupby("p_code")->get();
         $workers = DB::table("table_worker")->get();
         return view("manpower_readonly",["Projects"=>$projects,"Workers"=>$workers,'Man_power' => $man_res]);
     }
