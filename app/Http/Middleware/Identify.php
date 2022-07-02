@@ -19,10 +19,17 @@ class Identify
     public function handle(Request $request, Closure $next)
     {
         if (Auth::user()->name != "Besicon") {
-            if (Auth::user()->name == 'fab') {
-                return redirect('fabrication_readonly');
+            switch (Auth::user()->name) {
+                case 'fab':
+                    return redirect('fabrication_readonly');
+                case 'worker':
+                    return redirect('manpower_readonly');
+                case 'fac':
+                    return redirect('facworker_readonly/home');
+                case 'mat':
+                    return redirect("material/addmaterial");
+                
             }
-            return redirect('manpower_readonly');
         }
         return $next($request);
     }

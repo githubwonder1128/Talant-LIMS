@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Project Recorder</title>
+    <title>Besicon Project</title>
 
     <!-- Scripts -->
     <!-- <script src="{{ asset('js/app.js') }}" defer></script> -->
@@ -41,6 +41,10 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2014-11-29/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.1/xlsx.full.min.js"></script>
     <!-- Styles -->
     <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
     <script>
@@ -73,7 +77,7 @@
         position: fixed;
         z-index: 1;
         right: 20px;
-        bottom: 80%;
+        bottom: 0%;
     }
 
     #toast.show {
@@ -84,7 +88,7 @@
 
     @keyframes fadein {
         from {bottom: 0; opacity: 0;}
-        to {bottom: 80%; opacity: 1;}
+        to {bottom: 0%; opacity: 1;}
     }
 
     @keyframes fadeout {
@@ -99,77 +103,121 @@
     </div>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('/') }}">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         @guest
                         @else
                             @if(Auth::user()->name == 'Besicon')
+                            
+                            
+                         <img src="https://besicon.my/wp-content/uploads/2021/11/besicon-main-logo-2.png" width="150" height="70"/>
+                     
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/home')}}" style="font-size:20px;color:gold;font-weight:bold">Project Summary</a>
+                                <a class="nav-link btn btn-primary" href="{{ url('home')}}" style="font-size:20px;color:#0000FF;font-weight:bold">Project Summary<br>
+  项目总结</a>
 
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/details')}} " style="font-size:20px;color:gold;font-weight:bold">Project Details</a>
+                                <a class="nav-link btn btn-primary" href=" {{ url('details')}} " style="font-size:20px;color:#0000FF;font-weight:bold">Project Details<br>项目详情</a>
 
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/manpower')}}" style="font-size:20px;color:gold;font-weight:bold">Man Power</a>
+                                <div class="dropdown">
+                                    <a class="btn btn-primary dropdown-toggle"
+                                        href="#"
+                                        role="button"
+                                        id="dropdownMenuLink"
+                                        data-mdb-toggle="dropdown"
+                                        aria-expanded="false" 
+                                        style="font-size:20px;color:#0000FF;font-weight:bold">Man Power<br>场地工人</a>
+                                    <ul class="dropdown-menu" aria-labelledby="page-manpower">
+                                        <li><a class="dropdown-item" href="{{ url('/manpower/worker')}}">Site Worker</a></li>
+                                        <li><a class="dropdown-item" href="{{ url('/manpower/facworker')}}">Factory Worker</a></li>
+                                    </ul>
+                                </div>
+                                
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-primary" href=" {{ url('project_progress')}}" style="font-size:20px;color:#0000FF;font-weight:bold">Project Progress<br>项目进展</a>
 
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/project_progress')}}" style="font-size:20px;color:gold;font-weight:bold">Project Progress</a>
-
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/drawing')}}" style="font-size:20px;color:gold;font-weight:bold">Drawing</a>
+                                <a class="nav-link btn btn-primary" href=" {{ url('drawing')}}" style="font-size:20px;color:#0000FF;font-weight:bold">Drawing<br>绘图</a>
 
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/gallery')}}" style="font-size:20px;color:gold;font-weight:bold">Gallery</a>
+                                <a class="nav-link btn btn-primary" href=" {{ url('gallery')}}" style="font-size:20px;color:#0000FF;font-weight:bold">Gallery<br>场地照片</a>
 
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/report')}}" style="font-size:20px;color:gold;font-weight:bold">Report</a>
+                                <a class="nav-link btn btn-primary" href=" {{ url('report')}}" style="font-size:20px;color:#0000FF;font-weight:bold">Report<br>报告</a>
 
                             </li>
                             @elseif(Auth::user()->name == 'fab')
                                 <li class="nav-item">
-                                    <a class="nav-link" href=" {{ url('/fabribation_readonly')}}"  style="font-size:20px;color:gold;font-weight:bold">Fab</a>
+                                    <a class="nav-link  btn btn-primary" href=" {{ url('/fabribation_readonly')}}"  style="font-size:20px;color:#0000FF;font-weight:bold">Fabrication Department</a>
+
+                                </li>
+                            @elseif(Auth::user()->name == 'fac')
+                                <li class="nav-item" style="margin-top : 10px">
+                                    <a class="nav-link  btn btn-primary" href=" {{ url('facworker_readonly/home')}}"  style="font-size:20px;color:#0000FF;font-weight:bold">Factory Worker</a>
+
+                                </li>
+                                <li class="nav-item" style="margin-top : 10px">
+                                    <a class="nav-link  btn btn-primary" href=" {{ url('facworker_readonly/saverecords')}}"  style="font-size:20px;color:#0000FF;font-weight:bold">Saved Record</a>
+
+                                </li>
+                                <li class="nav-item" style="margin-top : 10px">
+                                    <a class="nav-link  btn btn-primary" href=" {{ url('facworker_readonly/report')}}"  style="font-size:20px;color:#0000FF;font-weight:bold">Report</a>
+
+                                </li>
+                            @elseif(Auth::user()->name == 'mat')
+                                <li class="nav-item" style="margin-top : 10px">
+                                    <a class="nav-link  btn btn-primary" href=" {{ url('material/addmaterial')}}"  style="font-size:20px;color:#0000FF;font-weight:bold">Add Material</a>
+
+                                </li>
+                                <li class="nav-item" style="margin-top : 10px">
+                                    <a class="nav-link  btn btn-primary" href=" {{ url('material/records')}}"  style="font-size:20px;color:#0000FF;font-weight:bold">Saved Record</a>
+
+                                </li>
+                                <li class="nav-item" style="margin-top : 10px">
+                                    <a class="nav-link  btn btn-primary" href=" {{ url('material/reports')}}"  style="font-size:20px;color:#0000FF;font-weight:bold">Report</a>
 
                                 </li>
                             @else
                                 <li class="nav-item">
-                                    <a class="nav-link" href=" {{ url('/manpower_readonly')}}"  style="font-size:20px;color:gold;font-weight:bold">Man Power</a>
+                                    <a class="nav-link  btn btn-primary" href=" {{ url('manpower_readonly')}}"  style="font-size:20px;color:#0000FF;font-weight:bold">Man Power</a>
 
                                 </li>
+                                
                             @endif
                         @endguest
                         
                     </ul>
 
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ">
+                    <ul class="navbar-nav " style="margin-top : 5px">
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('') }}</a>
                                 </li>
                             @endif
                         @else

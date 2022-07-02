@@ -21,7 +21,7 @@
                             <select class="form-control" id="p_code" onchange="get_name()">
                                 <!-- <option></option> -->
                                 @for($i = 0; $i < count($Projects); $i++)
-                                    <option>{{$Projects[$i]['p_code']}}</option>
+                                    <option value="{{$Projects[$i]['p_code']}}">{{$Projects[$i]['p_code']}}-{{$Projects[$i]['p_name']}}</option>
                                 @endfor
                             </select>
                         </div>
