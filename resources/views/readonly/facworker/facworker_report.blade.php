@@ -95,8 +95,10 @@
 </div>
 <script>
     $(document).ready(function(){
-        $("#table_report").DataTable();
-        $(".dataTables_filter").hide()
+        $("#table_report").DataTable({
+            searching :false,
+        "lengthMenu": [[50, 25, 10, -1], [50, 25, 10, "All"]]
+        });
     })
 
     let reports_txt =  `<?php echo json_encode($reports)?>`;

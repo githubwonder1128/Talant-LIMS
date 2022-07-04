@@ -2,10 +2,11 @@
 
 @section('content')
 <style>
-    table td {
-        font-size: 14px !important;
-        padding: 5px 5px 5px 5px !important;
-        height: auto !important;}
+   #table-report td,th{
+        font-size : 10px!important;
+        padding : 3px 3px 3px 3px !important;
+        height : auto!important;
+    }
 
 
         /* #tbl_projects_wrapper{
@@ -136,7 +137,7 @@
                                         id="table_record-{{$records[$i]->report_id}}">
                                         <td class='no' data-text="{{$i+1}}">{{$i+1}}
                                         </td>
-                                        <td class="fac_workername" data-text="{{$records[$i]->fac_workername}}"><b>
+                                        <td class="report_worker" data-text="{{$records[$i]->fac_id}}"><b>
                                                 <font color=#8B008B>{{$records[$i]->fac_workername}}
                                             </b></td>
                                         <td class="report_date" data-text="{{$records[$i]->report_date}}">
@@ -403,6 +404,58 @@
             </div>
         </div>
 
+        <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add FAC Worker</h5>
+                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid" id="modal-content">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>FAC Worker Name</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-control editrecord" id="editrecord-report_worker">
+                                        @for($i = 0; $i < count($facworkers); $i++)
+                                            <option value="{{$facworkers[$i]->fac_id}}">{{$facworkers[$i]->fac_workername}}</option>
+                                        @endfor
+                                    </select>
+                                    <!-- <input type="text" class="form-control editrecord" id="editrecord-fac_workername"> -->
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 20px;">
+                                <div class="col-md-4">
+                                    <label>Date</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="date" class="form-control editrecord" id="editrecord-report_date">
+                                </div>
+                            </div>
+                            
+                            <div class="row" style="margin-top: 20px;">
+                                <div class="col-md-4">
+                                    <label>Working Hour</label>
+                                </div>
+                                <div class="col-md-8">
+                                   <input type="number" class="form-control editrecord" id="editrecord-report_hour">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="edit_record('update')">Update</button>
+                        <button type="button" class="btn btn-primary" onclick="edit_record('delete')">Delete</button>
+
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
              
     </div>
 </div>
@@ -410,7 +463,7 @@
 $(document).ready(function(){
     $("#table_report").DataTable({
         searching :false,
-        "lengthMenu": [[100, 25, 50, -1], [100, 25, 50, "All"]]
+        "lengthMenu": [[50, 25, 10, -1], [50, 25, 10, "All"]]
     });
     $("#table_facworker").DataTable({
         searching :false,
@@ -520,7 +573,6 @@ function editworker(fac_id) {
 }
 
 function edit_project(editType) {
-    console.log(present_Id);
     let editData = {};
     $(".editfac").filter(function(){
         let classname = $(this).attr("id").split("-")[1];
@@ -542,6 +594,45 @@ function edit_project(editType) {
     })
 }
 
+function edit_record(editType) {
+    let editData = {};
+    $(".editrecord").filter(function(){
+        let classname = $(this).attr("id").split("-")[1];
+        editData[classname] = $(this).val();
+    })
+    console.log(editData);
+    $.ajax({
+        type : "post",
+        url : "{{url('/manpower/editrecord')}}",
+        data : {
+            editType : editType,
+            record_id : record_id,
+            editData : editData
+        },
+        success : function(data)
+        {
+            toastFunction();
+            console.log(data);
+            switch (editType) {
+                case "update":
+                   $("#table_record-"+record_id+" td").filter(function(){
+                        let classname = $(this).attr("class").split(" ")[0];
+                        $(this).text(editData[classname]);
+                        $(this).attr("data-text",editData[classname]);
+                        if (classname == "report_worker") {
+                            $(this).text(data[0]);
+
+                        }
+                   })
+                    break;
+                case "delete":
+                    $("#table_record-"+record_id).remove()
+                default:
+                    break;
+            }
+        }
+    })
+}
 function displayfacs() {
     $.ajax({
         type: "post",
@@ -567,8 +658,18 @@ function displayfacs() {
     })
 }
 
-function editRow() {
-    
+let record_id ;
+function editRow(id) {
+    let result = {};
+    record_id = id;
+    $("#table_record-"+id + " td").filter(function(){
+        let clname = $(this).attr("class").split(" ")[0];
+        console.log(clname);
+        result[clname] = $(this).data("text");
+        $("#editrecord-" + clname).val($(this).data('text'))
+    })
+    $("#exampleModal3").modal('show');
+
 }
 
 // 

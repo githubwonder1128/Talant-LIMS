@@ -263,6 +263,26 @@ class ManPowerController extends Controller
                 $in = DB::table("table_materialrecords")
                             ->insert($insertData);
                 return 'ok';
+
+            case "editrecord":
+                $editType = $request->editType;
+                $record_id = $request->record_id;
+                $editData = $request->editData;
+                switch ($editType) {
+                    case 'update':
+                        $up = DB::table("table_report")
+                                    ->where("report_id",$record_id)
+                                    ->update($editData);
+                        $name = DB::table("table_facworker")
+                                        ->where("fac_id",$editData['report_worker'])
+                                        ->pluck("fac_workername");
+                        return $name;
+                    case "delete":
+                        $del =  DB::table("table_report")
+                                    ->where("report_id",$record_id)
+                                    ->delete();
+                }
+                return "ok";
             default:
                 # code...
                 break;
