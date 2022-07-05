@@ -21,14 +21,18 @@ Route::get('/', function () {
 Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get("/manpower_readonly",[App\Http\Controllers\ManPowerController::class,'index']);
+Route::get("/manpower_readonly",[App\Http\Controllers\ManPowerController::class,'worker']);
 Route::get("/fabrication_readonly",[App\Http\Controllers\ManPowerController::class,'fabricaion']);
+
+Route::get("/facworker_readonly/{viewname}",[App\Http\Controllers\ManPowerController::class,'facworker']);
+Route::get("/material/{viewname}",[App\Http\Controllers\ManPowerController::class,'material']);
 
 
 Route::post("/manpower/{method}", [App\Http\Controllers\ManPowerController::class, 'response']);
 
 Route::middleware([Identify::class])->group(function(){
     Route::get('/{viewname}',[App\Http\Controllers\Projects::class, 'index']);
+    Route::get("/manpower/{viewname}",[App\Http\Controllers\Projects::class, 'manpower']);
 
     Route::post("/projects/{method}", [App\Http\Controllers\Projects::class, 'response']);
 

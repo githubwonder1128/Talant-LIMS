@@ -9,7 +9,7 @@ use App\Models\ManPower;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\FacWorker;
 class Projects extends Controller
 {
     //
@@ -54,11 +54,7 @@ class Projects extends Controller
                 $filename = $viewname;
 
                 return Storage::download('files/'.$filename);
-            case 'manpower':
-                $man_res = $ManPower->get_all();
-                $workers = DB::table("table_worker")->get();
-                $Projects = ProjectSummary::groupby("p_code")->get();
-                return view('manpower',['Man_power'=>$man_res,"Worker"=>$workers,"Projects"=>$Projects]);
+            
             case 'drawing':
                 $projects = ProjectSummary::groupby("p_code")->get();
                 $drawings = DB::table("table_drawing")->get();
@@ -92,6 +88,28 @@ class Projects extends Controller
             default:
                 $res = ProjectSummary::get();
                 return view('home',["Projects" => $res]);
+        }
+    }
+
+    public function manpower($viewname)
+    {
+        $ManPower = new ManPower;
+        $FacWorker = new FacWorker;
+        switch ($viewname) {
+            case 'worker':
+                $man_res = $ManPower->get_all();
+                $workers = DB::table("table_worker")->get();
+                $Projects = ProjectSummary::groupby("p_code")->get();
+                return view('manpower.siteworker',['Man_power'=>$man_res,"Worker"=>$workers,"Projects"=>$Projects]);
+            
+            case 'facworker':
+                $facworkers = FacWorker::get();
+                $records = $FacWorker->get_reports(date("Y"),date("m"),0);
+                $reports = $FacWorker->get_reports(date("Y"),date("m"),0);
+                return view("manpower.facworker",['facworkers'=>$facworkers,"records"=>$records,"reports"=>$reports]);
+            default:
+                # code...
+                break;
         }
     }
 
@@ -213,6 +231,10 @@ class Projects extends Controller
                     LEFT JOIN (SELECT SUM(progress_less_retention) AS progress_less_retention,p_code FROM table_progress_claims GROUP BY p_code) E ON A.p_code = E.p_code WhERE E.progress_less_retention > 0");
                 }
                 return $res;
+            // case 'createexcel':
+            //     $table_data = $request->table_data;
+            //     fopen("demo.xls")
+            //     break;
             
 
             default:
@@ -268,6 +290,11 @@ class Projects extends Controller
         $date_data = DB::table("table_projectsummary")
                         ->where("p_code",$p_code)
                         ->get();
+        $materials = DB::table("table_materialrecords")
+                        ->join("table_material","table_materialrecords.material_recordtype","=","table_material.mat_id")
+                        ->where("table_materialrecords.p_code",$p_code)
+                        ->get();
+        $result['materials'] = $materials;
         // dd($date_data[0]->date_completion);
         $result['date_data'] = ['date_startWork' => $date_data[0]->date_startWork, "date_completion" => $date_data[0]->date_completion];
 

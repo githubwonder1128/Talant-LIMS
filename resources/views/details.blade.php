@@ -412,8 +412,8 @@
             'include_materials':['YES','NO'],
             'include_roofing' : ["YES","NO"],
             'p_award':['Letter of Award','Approved Quotation','Purchase Order','Verbally','None'],
-            'f_completion' : ['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'],
-            'p_completion' : ['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'],
+            'f_completion' : ['0%','10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'],
+            'p_completion' : ['0%','10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'],
             'sub_description' : ['Purchasing Materials','Crane','Lorry','Referer Fee','Painting','Wages','Others']
         }
     

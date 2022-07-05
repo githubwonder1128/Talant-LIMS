@@ -19,5 +19,10 @@
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.32.11",
         "sass-loader": "^11.0.1"
+    },
+    "dependencies": {
+        "@grapecity/spread-excelio": "^15.1.2",
+        "@grapecity/spread-sheets": "^15.1.2",
+        "jquery": "^3.6.0"
     }
 }
