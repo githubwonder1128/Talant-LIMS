@@ -65,10 +65,12 @@ class ManPowerController extends Controller
                 $material = DB::table("table_material")->get();
                 return view("readonly.material.records",['material' => $material,'projects'=>$projects]);
             case 'reports':
-                $reports = DB::SELECT("SELECT A.material_recorddate,B.p_code,B.p_name,C.mat_type,A.material_recordnote,A.material_recordquantity FROM table_materialrecords A
+                $projects = ProjectSummary::orderby("p_code","desc")->get();
+                $material = DB::table("table_material")->get();
+                $reports = DB::SELECT("SELECT A.material_recordid,C.mat_id, A.material_recorddate,B.p_code,B.p_name,C.mat_type,A.material_recordnote,A.material_recordquantity FROM table_materialrecords A
                 LEFT JOIN table_projectsummary B ON A.p_code = B.p_code
                 LEFT JOIN table_material C ON A.material_recordtype = C.mat_id ORDER BY A.material_recorddate DESC");
-                return view("readonly.material.reports",['reports'=>$reports]);
+                return view("readonly.material.reports",['reports'=>$reports,"projects"=>$projects, "material"=>$material]);
 
         }
     }
@@ -280,6 +282,25 @@ class ManPowerController extends Controller
                     case "delete":
                         $del =  DB::table("table_report")
                                     ->where("report_id",$record_id)
+                                    ->delete();
+                }
+                return "ok";
+            case "editmaterialrecord":
+                $editType = $request->editType;
+                $record_id = $request->record_id;
+                $editData = $request->editData;
+                switch ($editType) {
+                    case 'update':
+                        $up = DB::table("table_materialrecords")
+                                    ->where("material_recordid",$record_id)
+                                    ->update($editData);
+                        $name = DB::table("table_material")
+                                        ->where("mat_id",$editData['material_recordtype'])
+                                        ->pluck("mat_type");
+                        return $name;
+                    case "delete":
+                        $del =  DB::table("table_materialrecords")
+                                    ->where("material_recordid",$record_id)
                                     ->delete();
                 }
                 return "ok";
